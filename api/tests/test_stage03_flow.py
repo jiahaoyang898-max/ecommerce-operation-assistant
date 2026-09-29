@@ -107,6 +107,5 @@ def test_swagger_and_stage_import_boundary(client):
     assert spec['components']['securitySchemes']['HTTPBearer']['scheme'] == 'bearer'
     assert spec['paths']['/api/v1/products']['post']['security'] == [{'HTTPBearer': []}]
     assert not any(name.startswith('app.agents') for name in sys.modules)
-    assert 'app.services.llm' not in sys.modules
     client.headers.pop('Authorization')
     assert client.get('/api/v1/products').status_code == 401

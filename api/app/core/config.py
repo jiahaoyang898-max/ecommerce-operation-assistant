@@ -59,6 +59,8 @@ class Settings(BaseSettings):
     video_poll_interval_seconds: int = Field(default=10, alias="VIDEO_POLL_INTERVAL_SECONDS")
     video_poll_max_attempts: int = Field(default=36, alias="VIDEO_POLL_MAX_ATTEMPTS")
 
+    uploads_dir: Path | None = Field(default=None, alias="UPLOADS_DIR")
+
     #核心方法是读取本地的.env文件覆盖当前对象中的变量值 
     # 推荐写成绝对路径的形式 指定固定的.env文件
     model_config = SettingsConfigDict(env_file=API_DIR / ".env",env_file_encoding="utf-8",extra="ignore")
@@ -109,3 +111,15 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     # print("hello")
     return Settings()
+
+
+def resolve_uploads_dir() -> Path:
+    """解析 uploads 根目录：优先用环境变量 UPLOADS_DIR，否则回退 API_DIR/uploads。
+
+    worker（写文件）与 API server（读文件）必须解析到同一物理位置，
+    否则生成的图片/视频前端访问时返回 404。混合部署时在 .env 设同一个绝对路径即可。
+    """
+    settings = get_settings()
+    if settings.uploads_dir:
+        return settings.uploads_dir
+    return API_DIR / "uploads"

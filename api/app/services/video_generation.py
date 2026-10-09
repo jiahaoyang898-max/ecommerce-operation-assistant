@@ -5,7 +5,8 @@ from typing import Any
 
 import httpx
 
-from app.core.config import API_DIR, Settings
+from app.core.config import API_DIR, Settings, resolve_uploads_dir
+from app.core.storage import BadDownloadedMediaError, save_downloaded_media
 from app.models import CreativePlan, CreativePlanType
 from app.services.model_settings import get_runtime_settings
 from app.services.volcengine import VolcengineCredentialsError, parse_access_key_pair, signed_json_headers
@@ -19,7 +20,7 @@ class VideoGenerationError(RuntimeError):
     pass
 
 
-GENERATED_VIDEOS_DIR = API_DIR / "uploads" / "generated-videos"
+GENERATED_VIDEOS_DIR = resolve_uploads_dir() / "generated-videos"
 
 
 def is_video_generation_configured(settings: Settings | None = None) -> bool:
@@ -344,8 +345,8 @@ def _download_generated_video(video_url: str, creative_plan_id: int) -> str:
     """下载生成视频，统一主流程中的格式、默认值和异常边界。"""
     # 按“输入归一化 → 业务校验 → 状态或持久化”推进，异常不得留下半完成结果。
     GENERATED_VIDEOS_DIR.mkdir(parents=True, exist_ok=True)
-    filename = f"video-plan-{creative_plan_id}-{uuid.uuid4().hex}.mp4"
-    output_path = GENERATED_VIDEOS_DIR / filename
+    base = f"video-plan-{creative_plan_id}-{uuid.uuid4().hex}"
+    temp_path = GENERATED_VIDEOS_DIR / f"{base}.tmp"
 
     # 下载成平台内素材地址，后续人工审核、编辑状态和投放实验都引用稳定路径。
     try:
@@ -355,7 +356,13 @@ def _download_generated_video(video_url: str, creative_plan_id: int) -> str:
     except httpx.HTTPError as exc:
         raise VideoGenerationError(_http_error_detail("Generated video download failed", exc)) from exc
 
-    output_path.write_bytes(response.content)
+    try:
+        ext = save_downloaded_media(response, temp_path, "video")
+    except BadDownloadedMediaError as exc:
+        raise VideoGenerationError(str(exc)) from exc
+    filename = f"{base}{ext}"
+    output_path = GENERATED_VIDEOS_DIR / filename
+    temp_path.rename(output_path)
     return f"/uploads/generated-videos/{filename}"
 
 

@@ -5,7 +5,8 @@ from typing import Any
 
 import httpx
 
-from app.core.config import API_DIR, Settings
+from app.core.config import API_DIR, Settings, resolve_uploads_dir
+from app.core.storage import BadDownloadedMediaError, save_downloaded_media
 from app.models import CreativePlan, CreativePlanType
 from app.services.model_settings import get_runtime_settings
 from app.services.volcengine import VolcengineCredentialsError, parse_access_key_pair, signed_json_headers
@@ -19,8 +20,7 @@ class ImageGenerationError(RuntimeError):
     pass
 
 
-UPLOADS_DIR = API_DIR / "uploads"
-GENERATED_IMAGES_DIR = UPLOADS_DIR / "generated"
+GENERATED_IMAGES_DIR = resolve_uploads_dir() / "generated"
 
 
 def is_image_generation_configured(settings: Settings | None = None) -> bool:
@@ -264,8 +264,8 @@ def _download_generated_image(image_url: str, creative_plan_id: int) -> str:
     """下载生成图片，统一主流程中的格式、默认值和异常边界。"""
     # 按“输入归一化 → 业务校验 → 状态或持久化”推进，异常不得留下半完成结果。
     GENERATED_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
-    filename = f"main-image-plan-{creative_plan_id}-{uuid.uuid4().hex}.png"
-    output_path = GENERATED_IMAGES_DIR / filename
+    base = f"main-image-plan-{creative_plan_id}-{uuid.uuid4().hex}"
+    temp_path = GENERATED_IMAGES_DIR / f"{base}.tmp"
 
     # 将供应商临时 URL 下载到本地 uploads，避免外部链接过期后素材审核记录失效。
     try:
@@ -275,7 +275,13 @@ def _download_generated_image(image_url: str, creative_plan_id: int) -> str:
     except httpx.HTTPError as exc:
         raise ImageGenerationError(_http_error_detail("Generated image download failed", exc)) from exc
 
-    output_path.write_bytes(response.content)
+    try:
+        ext = save_downloaded_media(response, temp_path, "image")
+    except BadDownloadedMediaError as exc:
+        raise ImageGenerationError(str(exc)) from exc
+    filename = f"{base}{ext}"
+    output_path = GENERATED_IMAGES_DIR / filename
+    temp_path.rename(output_path)
     return f"/uploads/generated/{filename}"
 
 

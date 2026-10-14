@@ -73,7 +73,7 @@ export function PlatformMappingPanel({
             <select
               name="platform"
               defaultValue={productPlatform}
-              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             >
               {platforms.map((platform) => (
                 <option key={platform.value} value={platform.value}>
@@ -87,7 +87,7 @@ export function PlatformMappingPanel({
             <select
               name="store_id"
               defaultValue={productStoreId ?? ""}
-              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             >
               <option value="">不绑定店铺</option>
               {stores.map((store) => (
@@ -101,7 +101,7 @@ export function PlatformMappingPanel({
             <span className="text-xs font-medium text-slate-700">SKU</span>
             <select
               name="sku_id"
-              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             >
               <option value="">商品级映射</option>
               {skus.map((sku) => (
@@ -119,7 +119,7 @@ export function PlatformMappingPanel({
             <input
               name="external_product_id"
               required
-              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
               placeholder="item_id"
             />
           </label>
@@ -127,7 +127,7 @@ export function PlatformMappingPanel({
             <span className="text-xs font-medium text-slate-700">平台 SKU ID</span>
             <input
               name="external_sku_id"
-              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
               placeholder="sku_id"
             />
           </label>
@@ -135,7 +135,7 @@ export function PlatformMappingPanel({
             <span className="text-xs font-medium text-slate-700">平台状态</span>
             <input
               name="status"
-              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+              className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
               placeholder="online / offline"
             />
           </label>
@@ -146,14 +146,14 @@ export function PlatformMappingPanel({
           <input
             name="listing_url"
             type="url"
-            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             placeholder="https://..."
           />
         </label>
 
         <button
           type="submit"
-          className="inline-flex h-9 w-fit items-center gap-2 rounded-md bg-slate-950 px-3 text-xs font-semibold text-white transition hover:bg-slate-800"
+          className="inline-flex h-9 w-fit items-center gap-2 rounded-md bg-brand-700 px-3 text-xs font-semibold text-white transition hover:bg-brand-800"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
           添加映射

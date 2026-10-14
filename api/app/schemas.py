@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import date, datetime
 from decimal import Decimal
 from typing import Any, Literal
@@ -883,6 +884,39 @@ class LoginRequest(BaseModel):
     password: str = Field(min_length=1, max_length=128)
 
 
+class RegisterRequest(BaseModel):
+    # 自助注册只接受昵称、邮箱、密码三项；角色一律由服务端固定为 operator，不接受客户端指定。
+    display_name: str = Field(min_length=1, max_length=120)
+    email: str = Field(min_length=3, max_length=255)
+    password: str = Field(min_length=8, max_length=128)
+
+    @field_validator("email")
+    @classmethod
+    def validate_email_format(cls, value: str) -> str:
+        """校验邮箱格式，避免把明显非邮箱的字符串写入登录唯一键。"""
+        normalized = value.strip().lower()
+        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", normalized):
+            raise ValueError("邮箱格式不正确")
+        return normalized
+
+    @field_validator("display_name")
+    @classmethod
+    def validate_display_name(cls, value: str) -> str:
+        """去掉昵称首尾空白，避免出现只由空格构成的展示名。"""
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("昵称不能为空")
+        return normalized
+
+    @field_validator("password")
+    @classmethod
+    def validate_password_strength(cls, value: str) -> str:
+        """注册密码要求同时包含字母与数字，与前端强度提示保持一致。"""
+        if not re.search(r"[A-Za-z]", value) or not re.search(r"\d", value):
+            raise ValueError("密码需同时包含字母和数字")
+        return value
+
+
 class AuthTokenRead(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -950,13 +984,6 @@ class WorkflowDefinitionRead(BaseModel):
 
 
 
-
-
-class DemoWorkspaceRead(BaseModel):
-    store_id: int
-    product_ids: list[int]
-    sku_ids: list[int]
-    message: str
 
 
 def _bounded_agent_json(value: dict[str, Any], *, max_bytes: int = 64 * 1024) -> dict[str, Any]:

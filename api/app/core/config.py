@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+from urllib.parse import quote
 
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -76,7 +77,10 @@ class Settings(BaseSettings):
     def checkpoint_database_url(self) -> str:
         if self.agent_checkpoint_database_url:
             return self.agent_checkpoint_database_url
-        return f"postgresql://{self.agent_checkpoint_user}:{self.agent_checkpoint_password}@{self.agent_checkpoint_host}:{self.agent_checkpoint_port}/{self.agent_checkpoint_database}"
+        # 账号密码必须按 RFC 3986 转义后再拼进连接串，否则密码里出现 @ : / ? 等保留字符会截断 URL 并导致连接失败。
+        checkpoint_user = quote(self.agent_checkpoint_user, safe="")
+        checkpoint_password = quote(self.agent_checkpoint_password, safe="")
+        return f"postgresql://{checkpoint_user}:{checkpoint_password}@{self.agent_checkpoint_host}:{self.agent_checkpoint_port}/{self.agent_checkpoint_database}"
 
     #后置参数校验
     @model_validator(mode="after")

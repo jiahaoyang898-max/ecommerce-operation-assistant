@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     message = String(data.message ?? data.detail ?? "");
   } catch {
     // 供应商或代理返回非 JSON 时仍给用户一个可读状态，避免设置页空白失败。
-    message = response.ok ? "娴嬭瘯閫氳繃" : "娴嬭瘯澶辫触";
+    message = response.ok ? "测试通过" : "测试失败";
   }
 
   const params = new URLSearchParams({

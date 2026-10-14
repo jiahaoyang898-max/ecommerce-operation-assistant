@@ -16,7 +16,7 @@ export function StoreCreateForm() {
   return (
     <form action="/stores/create" method="post" className="space-y-4">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-cyan-700 text-white">
+        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-brand-700 text-white">
           <StoreIcon className="h-5 w-5" aria-hidden="true" />
         </div>
         <div>
@@ -30,7 +30,7 @@ export function StoreCreateForm() {
         <input
           name="name"
           required
-          className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+          className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           placeholder="例如：抖音旗舰店"
         />
       </label>
@@ -41,7 +41,7 @@ export function StoreCreateForm() {
           <select
             name="platform"
             defaultValue="douyin"
-            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           >
             {platforms.map((platform) => (
               <option key={platform.value} value={platform.value}>
@@ -55,7 +55,7 @@ export function StoreCreateForm() {
           <span className="text-sm font-medium text-slate-700">负责人</span>
           <input
             name="owner_name"
-            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             placeholder="运营负责人"
           />
         </label>
@@ -63,7 +63,7 @@ export function StoreCreateForm() {
 
       <button
         type="submit"
-        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-brand-700 px-4 text-sm font-semibold text-white transition hover:bg-brand-800"
       >
         <Plus className="h-4 w-4" aria-hidden="true" />
         创建店铺

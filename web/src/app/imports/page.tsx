@@ -29,7 +29,7 @@ const templates = [
 /** 渲染导入页面；在服务端加载业务数据，并把交互交给对应表单或客户端组件。 */
 export default function ImportCenterPage() {
   return (
-    <main className="min-h-screen bg-[#f7f8fb] px-5 py-6 text-slate-950 lg:px-8">
+    <main className="min-h-screen bg-transparent px-5 py-6 text-slate-950 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
         <div>
           <Link
@@ -43,11 +43,11 @@ export default function ImportCenterPage() {
 
         <header className="rounded-md border border-slate-200 bg-white p-5">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-slate-950 text-white">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-brand-700 text-white">
               <Upload className="h-6 w-6" aria-hidden="true" />
             </div>
             <div>
-              <p className="text-sm font-medium text-cyan-700">Data Import</p>
+              <p className="text-sm font-medium text-brand-700">Data Import</p>
               <h1 className="mt-1 text-2xl font-semibold tracking-normal text-slate-950">导入中心</h1>
               <p className="mt-2 text-sm text-slate-500">
                 汇总商品、SKU 库存、经营数据和平台字段映射模板，后续承接导入预览和错误行提示。
@@ -61,7 +61,7 @@ export default function ImportCenterPage() {
             <div key={template.href} className="rounded-md border border-slate-200 bg-white p-5">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-cyan-50 text-cyan-700">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-700">
                     <FileSpreadsheet className="h-5 w-5" aria-hidden="true" />
                   </div>
                   <div>

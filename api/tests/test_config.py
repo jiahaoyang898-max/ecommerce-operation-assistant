@@ -6,7 +6,7 @@ from app.core.config import Settings
 
 def test_production_rejects_default_auth_secret() -> None:
     """验证“productionrejects默认认证密钥”场景,确保重构后仍满足预期业务与安全边界。"""
-    with pytest.raises(ValueError, match="Production requires AUTH_SECRET_KEY"):
+    with pytest.raises(ValueError, match="AUTH_SECRET_KEY must be set to a strong value in production"):
         Settings(
             DATABASE_URL="sqlite://",
             APP_ENV="production",
@@ -16,7 +16,7 @@ def test_production_rejects_default_auth_secret() -> None:
 
 def test_production_rejects_short_auth_secret() -> None:
     """验证“productionrejects短链认证密钥”场景,确保重构后仍满足预期业务与安全边界。"""
-    with pytest.raises(ValueError, match="Production requires AUTH_SECRET_KEY"):
+    with pytest.raises(ValueError, match="AUTH_SECRET_KEY must be set to a strong value in production"):
         Settings(
             DATABASE_URL="sqlite://",
             APP_ENV="prod",
@@ -38,7 +38,7 @@ def test_production_accepts_long_auth_secret() -> None:
 
 def test_checkpoint_url_password_is_validated_in_production() -> None:
     """验证“checkpointURLpassword判断validatedinproduction”场景,确保重构后仍满足预期业务与安全边界。"""
-    with pytest.raises(ValueError, match="Production requires a strong Agent checkpoint database password"):
+    with pytest.raises(ValueError, match="AGENT_CHECKPOINT_PASSWORD must be set to a strong value in production"):
         Settings(
             DATABASE_URL="sqlite://",
             APP_ENV="production",
@@ -55,6 +55,6 @@ def test_checkpoint_url_includes_reserved_password_characters() -> None:
         AGENT_CHECKPOINT_PASSWORD=password,
     )
 
-    assert settings.agent_checkpoint_connection_url == (
+    assert settings.checkpoint_database_url == (
         f"postgresql://agent:{quote(password, safe='')}@127.0.0.1:5433/agent_checkpoints"
     )

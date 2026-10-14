@@ -166,8 +166,19 @@ def _post_jimeng_video_json(
 
     code = data.get("code")
     if code != 10000:
-        raise VideoGenerationError(str(data)[:500])
+        raise VideoGenerationError(_jimeng_error_detail(data))
     return data
+
+
+def _jimeng_error_detail(data: dict[str, Any]) -> str:
+    """把即梦返回的错误码转成可读中文，便于运营在任务详情里直接判断原因。"""
+    code = data.get("code")
+    message = str(data.get("message") or "")
+    if code == 50400 or "Access Denied" in message:
+        return "供应商拒绝调用：当前火山引擎账号未开通该视频模型权限（code 50400 Access Denied），请在火山引擎控制台开通后重试。"
+    if code == 50200 or "not supported" in message:
+        return f"供应商不支持当前视频模型名（code {code}），请检查模型配置。"
+    return f"供应商返回错误（code={code}）：{message[:200]}"
 
 
 def _extract_jimeng_task_id(data: dict[str, Any]) -> str:

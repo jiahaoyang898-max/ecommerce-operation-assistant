@@ -42,5 +42,20 @@ celery_app.conf.update(
             "schedule": 30.0,
             "options": {"queue": settings.celery_maintenance_queue},
         },
+        "sweep-generation-jobs": {
+            "task": "maintenance.sweep_generation_jobs",
+            "schedule": 5.0,
+            "options": {"queue": settings.celery_maintenance_queue},
+        },
+        "sweep-stale-generation-jobs": {
+            "task": "maintenance.sweep_stale_generation_jobs",
+            "schedule": 60.0,
+            "options": {"queue": settings.celery_maintenance_queue},
+        },
+        "run-due-competitor-monitors": {
+            "task": "maintenance.run_due_competitor_monitors",
+            "schedule": 600.0,
+            "options": {"queue": settings.celery_maintenance_queue},
+        },
     },
 )

@@ -32,12 +32,13 @@ from app.models import (
     Store,
     User,
 )
-from app.schemas import CompetitorMonitorSchedulerRunResult, DemoWorkspaceRead, GenerationJobTimeoutSweepResult
+from app.schemas import CompetitorMonitorSchedulerRunResult, GenerationJobTimeoutSweepResult
 from app.schemas import ProductImportRequest, ProductImportResult
 from app.schemas import PerformanceImportRequest, PerformanceImportResult
 from app.schemas import SkuInventoryImportRequest, SkuInventoryImportResult
-from app.services.inventory import create_inventory_item_for_sku
 from app.services.competitor_monitor_scheduler import run_due_competitor_monitors
+from app.services.generation_jobs import mark_stale_running_generation_jobs
+from app.services.inventory import create_inventory_item_for_sku
 from app.services.performance_import import import_performance_records, preview_performance_import
 from app.services.product_import import import_products, preview_product_import
 from app.services.review import enrich_performance_metrics
@@ -179,18 +180,6 @@ def import_performance_csv(
     )
 
 
-@router.post(
-    "/demo-data",
-    response_model=DemoWorkspaceRead,
-    status_code=status.HTTP_201_CREATED,
-)
-def create_demo_workspace(
-    db: SessionDep,
-    _current_user: Annotated[User, Depends(require_edit_permission)],
-) -> DemoWorkspaceRead:
-    raise HTTPException(status_code=501, detail="本阶段尚未接入，请完成后续大模型或 Agent 章节。")
-
-
 @router.post("/competitor-monitors/run-due", response_model=CompetitorMonitorSchedulerRunResult)
 def run_due_competitor_monitor_tasks(
     db: SessionDep,
@@ -209,7 +198,11 @@ def sweep_generation_job_timeouts(
     timeout_minutes: int = Query(default=30, ge=1, le=1440),
 ) -> GenerationJobTimeoutSweepResult:
     # 超时清理只修复卡住的生成任务状态，不取消供应商侧可能仍在运行的外部任务。
-    raise HTTPException(status_code=501, detail="本阶段尚未接入，请完成后续大模型或 Agent 章节。")
+    processed_count = mark_stale_running_generation_jobs(db, timeout_minutes=timeout_minutes)
+    return GenerationJobTimeoutSweepResult(
+        timeout_minutes=timeout_minutes,
+        processed_count=processed_count,
+    )
 
 
 def create_inventory_item_lock(db: Session, item, locked_quantity: int) -> None:

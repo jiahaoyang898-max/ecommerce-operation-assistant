@@ -113,7 +113,7 @@ export function ProductCreateForm({ stores = [] }: ProductCreateFormProps) {
 
       <button
         type="submit"
-        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-brand-700 px-4 text-sm font-semibold text-white transition hover:bg-brand-800"
       >
         <Plus className="h-4 w-4" aria-hidden="true" />
         创建商品

@@ -4,7 +4,6 @@ import {
   Boxes,
   Building2,
   ClipboardList,
-  Database,
   Download,
   FileText,
   ImageIcon,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { LogoutConfirm } from "@/components/logout-confirm";
 import { ProductCreateForm } from "@/components/product-create-form";
 import { StoreCreateForm } from "@/components/store-create-form";
 import { getCurrentUser, getProducts, getStores } from "@/lib/api";
@@ -43,14 +43,14 @@ const platformFilters: Array<{ value: "all" | Platform; label: string }> = [
 
 const workflow = [
   { title: "建店建档", icon: Building2, tone: "bg-sky-100 text-sky-700", href: "/" },
-  { title: "导入数据", icon: ClipboardList, tone: "bg-cyan-100 text-cyan-700", href: "/imports" },
+  { title: "导入数据", icon: ClipboardList, tone: "bg-brand-100 text-brand-700", href: "/imports" },
   { title: "补商品信息", icon: ImageIcon, tone: "bg-emerald-100 text-emerald-700", href: "/?workflow=product" },
   { title: "投放建议", icon: Megaphone, tone: "bg-amber-100 text-amber-700", href: "/?workflow=ads" },
   { title: "周期复盘", icon: FileText, tone: "bg-rose-100 text-rose-700", href: "/?workflow=review" },
 ];
 
 type HomeProps = {
-  searchParams?: Promise<{ platform?: string; store?: string; demo?: string }>;
+  searchParams?: Promise<{ platform?: string; store?: string }>;
 };
 
 /** 渲染首页页面；在服务端加载业务数据，并把交互交给对应表单或客户端组件。 */
@@ -80,28 +80,20 @@ export default async function Home({ searchParams }: HomeProps) {
   });
 
   return (
-    <main className="min-h-screen bg-[#f7f8fb] px-5 py-6 text-slate-950 lg:px-8">
+    <main className="min-h-screen bg-transparent px-5 py-6 text-slate-950 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
         <div className="flex justify-end gap-2">
           <Link
             href="/agent"
-            className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-cyan-700 px-3 text-sm font-medium text-white hover:bg-cyan-800"
+            className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-brand-700 px-3 text-sm font-medium text-white hover:bg-brand-800"
           >
             <Bot className="h-4 w-4" aria-hidden="true" />
             Agent 中心
           </Link>
           {currentUser ? (
-            <form action="/logout" method="post" className="inline-flex items-center gap-2">
-              <span className="inline-flex h-9 items-center rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-600">
-                {currentUser.display_name}
-              </span>
-              <button
-                type="submit"
-                className="inline-flex h-9 items-center justify-center rounded-md border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
-              >
-                退出
-              </button>
-            </form>
+            <div className="inline-flex items-center gap-2">
+              <LogoutConfirm displayName={currentUser.display_name} email={currentUser.email} />
+            </div>
           ) : (
             <Link
               href="/login"
@@ -121,7 +113,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-sm font-medium text-cyan-700">Ecommerce Operation Assistant</p>
+            <p className="text-sm font-medium text-brand-700">Ecommerce Operation Assistant</p>
             <h1 className="mt-2 text-2xl font-semibold tracking-normal text-slate-950 sm:text-3xl">
               多平台店铺运营工作台
             </h1>
@@ -136,32 +128,15 @@ export default async function Home({ searchParams }: HomeProps) {
 
         <section className="flex flex-col gap-3 rounded-md border border-slate-200 bg-white p-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-slate-950">演示和导入</h2>
+            <h2 className="text-sm font-semibold text-slate-950">数据导入</h2>
             <p className="mt-1 text-sm text-slate-500">
-              用演示数据快速跑通店铺、库存、投放实验和复盘链路，或下载绩效数据导入模板。
+              下载绩效数据导入模板，或进入导入中心上传商品、SKU 库存与绩效数据。
             </p>
-            {query.demo === "created" ? (
-              <p className="mt-2 text-xs font-medium text-emerald-700">演示数据已准备好。</p>
-            ) : null}
-            {query.demo === "failed" ? (
-              <p className="mt-2 text-xs font-medium text-rose-700">演示数据创建失败，请确认当前账号有编辑权限。</p>
-            ) : null}
             {!canEdit ? (
               <p className="mt-2 text-xs font-medium text-amber-700">当前账号为只读权限，只能查看数据，不能创建或导入。</p>
             ) : null}
           </div>
           <div className="flex flex-wrap gap-2">
-            {canEdit ? (
-              <form action="/workspace/demo-data" method="post">
-                <button
-                  type="submit"
-                  className="inline-flex h-9 items-center gap-2 rounded-md bg-slate-950 px-3 text-sm font-medium text-white hover:bg-slate-800"
-                >
-                  <Database className="h-4 w-4" aria-hidden="true" />
-                  生成演示数据
-                </button>
-              </form>
-            ) : null}
             <Link
               href="/workspace/templates/performance-records"
               className="inline-flex h-9 items-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
@@ -207,7 +182,7 @@ export default async function Home({ searchParams }: HomeProps) {
                       href={platform.value === "all" ? "/" : `/?platform=${platform.value}`}
                       className={`inline-flex h-9 items-center rounded-md border px-3 text-sm font-medium ${
                         selectedPlatform === platform.value
-                          ? "border-cyan-700 bg-cyan-700 text-white"
+                          ? "border-brand-700 bg-brand-700 text-white"
                           : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                       }`}
                     >
@@ -292,7 +267,7 @@ export default async function Home({ searchParams }: HomeProps) {
               <Link
                 key={item.title}
                 href={workflowItem?.href ?? item.href}
-                className="rounded-md border border-slate-200 bg-white p-4 transition hover:border-cyan-200 hover:bg-cyan-50"
+                className="rounded-md border border-slate-200 bg-white p-4 transition hover:border-brand-200 hover:bg-brand-50"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className={`flex h-9 w-9 items-center justify-center rounded-md ${item.tone}`}>
@@ -392,7 +367,7 @@ function StoreSummaryCard({
   return (
     <div
       className={`rounded-md border px-4 py-4 transition ${
-        selected ? "border-cyan-700 bg-cyan-50" : "border-slate-200 bg-white hover:bg-slate-50"
+        selected ? "border-brand-700 bg-brand-50" : "border-slate-200 bg-white hover:bg-slate-50"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -428,7 +403,7 @@ function StoreSummaryCard({
         </Link>
         <Link
           href={`/stores/${store.id}`}
-          className="inline-flex h-8 items-center rounded-md bg-slate-950 px-3 text-xs font-medium text-white hover:bg-slate-800"
+          className="inline-flex h-8 items-center rounded-md bg-brand-700 px-3 text-xs font-medium text-white hover:bg-brand-800"
         >
           店铺详情
         </Link>

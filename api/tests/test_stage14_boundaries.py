@@ -127,9 +127,10 @@ def test_saved_settings_are_used_by_text_test(client, monkeypatch):
 
 
 def test_unconfigured_and_media_boundary(client):
+    """未配置模型时三类目标都应在调用供应商前被拦下（400），未知目标由 schema 拦下（422）。"""
     assert client.post('/api/v1/model-settings/test', json={'target': 'text'}).status_code == 400
-    assert client.post('/api/v1/model-settings/test', json={'target': 'image'}).status_code == 501
-    assert client.post('/api/v1/model-settings/test', json={'target': 'video'}).status_code == 501
+    assert client.post('/api/v1/model-settings/test', json={'target': 'image'}).status_code == 400
+    assert client.post('/api/v1/model-settings/test', json={'target': 'video'}).status_code == 400
     assert client.post('/api/v1/model-settings/test', json={'target': 'unknown'}).status_code == 422
 
 

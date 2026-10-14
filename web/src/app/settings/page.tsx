@@ -37,7 +37,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
 
   if (!settings) {
     return (
-      <main className="min-h-screen bg-[#f7f8fb] px-5 py-6 text-slate-950 lg:px-8">
+      <main className="min-h-screen bg-transparent px-5 py-6 text-slate-950 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <BackLink />
           <div className="mt-6 rounded-md border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">
@@ -49,7 +49,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f8fb] px-5 py-6 text-slate-950 lg:px-8">
+    <main className="min-h-screen bg-transparent px-5 py-6 text-slate-950 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
         <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -112,7 +112,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
               icon={<Bot className="h-5 w-5" aria-hidden="true" />}
               title="文本模型"
               subtitle="用于诊断、主图方案、视频脚本和复盘。"
-              tone="bg-slate-950"
+              tone="bg-brand-700"
             />
             <div className="mt-5 space-y-4">
               <TextInput
@@ -143,23 +143,25 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
               tone="bg-emerald-600"
             />
             <div className="mt-5 space-y-4">
-              <TextInput
-                label="Provider"
-                name="image_provider"
-                defaultValue={settings.image.provider}
-                placeholder="dashscope"
-              />
+              {/* 图片生成当前仅适配即梦（火山引擎），后端 image_generation 硬性校验只接受 jimeng，开放自由填写会被拒绝，故 Provider 固定展示。 */}
+              <div>
+                <span className="text-sm font-medium text-slate-700">Provider</span>
+                <div className="mt-2 flex h-11 items-center rounded-md border border-slate-200 bg-slate-50 px-3 text-sm text-slate-700">
+                  即梦 Jimeng（火山引擎）
+                </div>
+                <input type="hidden" name="image_provider" value={settings.image.provider || "jimeng"} />
+              </div>
               <TextInput
                 label="Model"
                 name="image_model"
                 defaultValue={settings.image.model}
-                placeholder="wan2.6-t2i"
+                placeholder="jimeng_t2i_v30"
               />
               <TextInput
                 label="Base URL"
                 name="image_base_url"
                 defaultValue={settings.image.base_url}
-                placeholder="https://dashscope.aliyuncs.com/api/v1"
+                placeholder="https://visual.volcengineapi.com"
               />
               <div className="grid gap-4 sm:grid-cols-2">
                 <TextInput
@@ -210,13 +212,13 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
                 label="Model"
                 name="video_model"
                 defaultValue={settings.video.model}
-                placeholder="wan2.6-t2v"
+                placeholder="jimeng_t2v_v30"
               />
               <TextInput
                 label="Base URL"
                 name="video_base_url"
                 defaultValue={settings.video.base_url}
-                placeholder="https://dashscope.aliyuncs.com/api/v1"
+                placeholder="https://visual.volcengineapi.com"
               />
               <div className="grid gap-4 sm:grid-cols-2">
                 <TextInput
@@ -267,7 +269,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             <button
               type="submit"
               form="model-settings-form"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-slate-950 px-5 text-sm font-semibold text-white hover:bg-slate-800"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-brand-700 px-5 text-sm font-semibold text-white hover:bg-brand-800"
             >
               <KeyRound className="h-4 w-4" aria-hidden="true" />
               保存配置
@@ -320,7 +322,7 @@ function UserManagementPanel({ users }: { users: UserAccount[] }) {
         </label>
         <button
           type="submit"
-          className="inline-flex h-11 items-center justify-center rounded-md bg-slate-950 px-4 text-sm font-semibold text-white hover:bg-slate-800"
+          className="inline-flex h-11 items-center justify-center rounded-md bg-brand-700 px-4 text-sm font-semibold text-white hover:bg-brand-800"
         >
           添加用户
         </button>
@@ -492,12 +494,10 @@ function ProviderSelect({
       <span className="text-sm font-medium text-slate-700">{label}</span>
       <select
         name={name}
-        defaultValue={defaultValue || "dashscope"}
+        defaultValue={defaultValue || "jimeng"}
         className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
       >
-        <option value="dashscope">DashScope / 通义万相</option>
-        <option value="jimeng">Jimeng / 即梦</option>
-        <option value="custom">Custom</option>
+        <option value="jimeng">Jimeng / 即梦（火山引擎）</option>
       </select>
     </label>
   );

@@ -61,7 +61,7 @@ export default async function StorePage({ params, searchParams }: StorePageProps
   const canEdit = Boolean(currentUser?.permissions.can_edit);
 
   return (
-    <main className="min-h-screen bg-[#f7f8fb] px-5 py-6 text-slate-950 lg:px-8">
+    <main className="min-h-screen bg-transparent px-5 py-6 text-slate-950 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
         <div>
           <Link
@@ -76,11 +76,11 @@ export default async function StorePage({ params, searchParams }: StorePageProps
         <header className="rounded-md border border-slate-200 bg-white p-5">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-cyan-700 text-white">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-brand-700 text-white">
                 <StoreIcon className="h-6 w-6" aria-hidden="true" />
               </div>
               <div>
-                <p className="text-sm font-medium text-cyan-700">{platformLabels[store.platform]}</p>
+                <p className="text-sm font-medium text-brand-700">{platformLabels[store.platform]}</p>
                 <h1 className="mt-1 text-2xl font-semibold tracking-normal text-slate-950">{store.name}</h1>
                 <p className="mt-2 text-sm text-slate-500">
                   {store.owner_name ? `负责人：${store.owner_name}` : "未设置负责人"}
@@ -195,7 +195,7 @@ export default async function StorePage({ params, searchParams }: StorePageProps
               className={`inline-flex h-8 items-center rounded-md border px-3 text-xs font-medium ${
                 query.inventory === "low"
                   ? "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-                  : "border-cyan-700 bg-cyan-700 text-white"
+                  : "border-brand-700 bg-brand-700 text-white"
               }`}
             >
               全部库存
@@ -204,7 +204,7 @@ export default async function StorePage({ params, searchParams }: StorePageProps
               href={`/stores/${store.id}?inventory=low`}
               className={`inline-flex h-8 items-center rounded-md border px-3 text-xs font-medium ${
                 query.inventory === "low"
-                  ? "border-cyan-700 bg-cyan-700 text-white"
+                  ? "border-brand-700 bg-brand-700 text-white"
                   : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
               }`}
             >
@@ -310,7 +310,7 @@ function StoreWorkflowPanel({ steps }: { steps: StoreWorkflowStep[] }) {
     <section className="rounded-md border border-slate-200 bg-white p-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-cyan-700 text-white">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand-700 text-white">
             <ClipboardList className="h-5 w-5" aria-hidden="true" />
           </div>
           <div>
@@ -320,7 +320,7 @@ function StoreWorkflowPanel({ steps }: { steps: StoreWorkflowStep[] }) {
         </div>
         <Link
           href={nextStep.href}
-          className="inline-flex h-9 w-fit items-center gap-2 rounded-md bg-slate-950 px-3 text-sm font-medium text-white hover:bg-slate-800"
+          className="inline-flex h-9 w-fit items-center gap-2 rounded-md bg-brand-700 px-3 text-sm font-medium text-white hover:bg-brand-800"
         >
           继续处理
           <ArrowRight className="h-4 w-4" aria-hidden="true" />

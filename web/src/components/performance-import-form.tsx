@@ -44,7 +44,7 @@ export function PerformanceImportForm({ canEdit = true, productId }: Performance
           required
           type="file"
           accept=".csv,text/csv"
-          className="mt-2 block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-950 file:mr-3 file:rounded-md file:border-0 file:bg-slate-950 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white"
+          className="mt-2 block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-950 file:mr-3 file:rounded-md file:border-0 file:bg-brand-700 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white"
         />
       </label>
 
@@ -57,7 +57,7 @@ export function PerformanceImportForm({ canEdit = true, productId }: Performance
 
       <button
         type="submit"
-        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-brand-700 px-4 text-sm font-semibold text-white transition hover:bg-brand-800"
       >
         <Upload className="h-4 w-4" aria-hidden="true" />
         导入 CSV

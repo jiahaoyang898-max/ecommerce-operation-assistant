@@ -79,13 +79,14 @@ def test_competitor_creative_performance_review_flow(client):
         assert len(detail[key]) == 1, key
 
 
-def test_ai_boundary_is_explicit_and_does_not_write(client):
+def test_product_diagnosis_is_generated_synchronously(client):
+    """商品诊断已接入：同步生成并落库，不产生异步生成任务。"""
     item = product(client)
     response = client.post(f"/api/v1/products/{item['id']}/diagnoses/generate")
-    assert response.status_code == 501
-    assert '尚未接入' in response.json()['detail']
+    assert response.status_code == 201, response.text
     detail = client.get(f"/api/v1/products/{item['id']}").json()
-    assert detail['diagnoses'] == []
+    assert len(detail['diagnoses']) == 1
+    # 诊断是同步规则产出，不应顺带创建异步生成任务。
     assert detail['generation_jobs'] == []
 
 
@@ -106,6 +107,7 @@ def test_swagger_and_stage_import_boundary(client):
     spec = client.get('/openapi.json').json()
     assert spec['components']['securitySchemes']['HTTPBearer']['scheme'] == 'bearer'
     assert spec['paths']['/api/v1/products']['post']['security'] == [{'HTTPBearer': []}]
-    assert not any(name.startswith('app.agents') for name in sys.modules)
+    # Agent 能力已正式接入，边界检查改为确认相关端点在 OpenAPI 中显式注册。
+    assert any(path.startswith('/api/v1/agent') for path in spec['paths'])
     client.headers.pop('Authorization')
     assert client.get('/api/v1/products').status_code == 401

@@ -19,7 +19,7 @@ export function SkuCreateForm({ canEdit = true, productId }: { canEdit?: boolean
   return (
     <form action={`/products/${productId}/skus/create`} method="post" className="space-y-4">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-cyan-700 text-white">
+        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-brand-700 text-white">
           <Boxes className="h-5 w-5" aria-hidden="true" />
         </div>
         <div>
@@ -34,7 +34,7 @@ export function SkuCreateForm({ canEdit = true, productId }: { canEdit?: boolean
           <input
             name="sku_code"
             required
-            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             placeholder="例如：SKU-001"
           />
         </label>
@@ -43,7 +43,7 @@ export function SkuCreateForm({ canEdit = true, productId }: { canEdit?: boolean
           <input
             name="name"
             required
-            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             placeholder="例如：12 包装"
           />
         </label>
@@ -55,7 +55,7 @@ export function SkuCreateForm({ canEdit = true, productId }: { canEdit?: boolean
           <input
             name="price"
             inputMode="decimal"
-            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             placeholder="29.90"
           />
         </label>
@@ -64,7 +64,7 @@ export function SkuCreateForm({ canEdit = true, productId }: { canEdit?: boolean
           <input
             name="cost"
             inputMode="decimal"
-            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             placeholder="12.50"
           />
         </label>
@@ -76,7 +76,7 @@ export function SkuCreateForm({ canEdit = true, productId }: { canEdit?: boolean
           <input
             name="initial_quantity"
             inputMode="numeric"
-            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             placeholder="100"
           />
         </label>
@@ -85,7 +85,7 @@ export function SkuCreateForm({ canEdit = true, productId }: { canEdit?: boolean
           <input
             name="warning_threshold"
             inputMode="numeric"
-            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             placeholder="20"
           />
         </label>
@@ -93,7 +93,7 @@ export function SkuCreateForm({ canEdit = true, productId }: { canEdit?: boolean
           <span className="text-sm font-medium text-slate-700">仓位</span>
           <input
             name="location"
-            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-2 h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
             placeholder="A-01"
           />
         </label>
@@ -101,7 +101,7 @@ export function SkuCreateForm({ canEdit = true, productId }: { canEdit?: boolean
 
       <button
         type="submit"
-        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-brand-700 px-4 text-sm font-semibold text-white transition hover:bg-brand-800"
       >
         <Plus className="h-4 w-4" aria-hidden="true" />
         创建 SKU
@@ -124,7 +124,7 @@ export function InventoryMovementForm({ productId, sku }: { productId: number; s
         <select
           name="movement_type"
           defaultValue="inbound"
-          className="h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+          className="h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
         >
           <option value="inbound">入库</option>
           <option value="outbound">出库</option>
@@ -138,7 +138,7 @@ export function InventoryMovementForm({ productId, sku }: { productId: number; s
           name="quantity"
           required
           inputMode="numeric"
-          className="h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+          className="h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           placeholder="数量"
         />
       </label>
@@ -146,13 +146,13 @@ export function InventoryMovementForm({ productId, sku }: { productId: number; s
         <span className="sr-only">原因</span>
         <input
           name="reason"
-          className="h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+          className="h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           placeholder="原因"
         />
       </label>
       <button
         type="submit"
-        className="inline-flex h-9 items-center justify-center rounded-md bg-slate-950 px-3 text-xs font-semibold text-white transition hover:bg-slate-800"
+        className="inline-flex h-9 items-center justify-center rounded-md bg-brand-700 px-3 text-xs font-semibold text-white transition hover:bg-brand-800"
       >
         登记
       </button>
@@ -274,7 +274,7 @@ function SkuUpdateForm({ productId, sku }: { productId: number; sku: ProductSku 
             name="sku_code"
             required
             defaultValue={sku.sku_code}
-            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           />
         </label>
         <label className="block">
@@ -283,7 +283,7 @@ function SkuUpdateForm({ productId, sku }: { productId: number; sku: ProductSku 
             name="name"
             required
             defaultValue={sku.name}
-            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           />
         </label>
       </div>
@@ -294,7 +294,7 @@ function SkuUpdateForm({ productId, sku }: { productId: number; sku: ProductSku 
             name="price"
             inputMode="decimal"
             defaultValue={sku.price ?? ""}
-            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           />
         </label>
         <label className="block">
@@ -303,7 +303,7 @@ function SkuUpdateForm({ productId, sku }: { productId: number; sku: ProductSku 
             name="cost"
             inputMode="decimal"
             defaultValue={sku.cost ?? ""}
-            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           />
         </label>
         <label className="block">
@@ -311,7 +311,7 @@ function SkuUpdateForm({ productId, sku }: { productId: number; sku: ProductSku 
           <select
             name="status"
             defaultValue={sku.status}
-            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           >
             <option value="active">启用</option>
             <option value="inactive">停用</option>
@@ -325,7 +325,7 @@ function SkuUpdateForm({ productId, sku }: { productId: number; sku: ProductSku 
             name="warning_threshold"
             inputMode="numeric"
             defaultValue={sku.inventory_item?.warning_threshold ?? 0}
-            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           />
         </label>
         <label className="block">
@@ -333,13 +333,13 @@ function SkuUpdateForm({ productId, sku }: { productId: number; sku: ProductSku 
           <input
             name="location"
             defaultValue={sku.inventory_item?.location ?? ""}
-            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+            className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           />
         </label>
       </div>
       <button
         type="submit"
-        className="inline-flex h-9 w-fit items-center rounded-md bg-slate-950 px-3 text-xs font-semibold text-white transition hover:bg-slate-800"
+        className="inline-flex h-9 w-fit items-center rounded-md bg-brand-700 px-3 text-xs font-semibold text-white transition hover:bg-brand-800"
       >
         保存 SKU
       </button>
@@ -362,14 +362,14 @@ function StocktakeForm({ productId, sku }: { productId: number; sku: ProductSku 
           required
           inputMode="numeric"
           defaultValue={currentQuantity}
-          className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+          className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
         />
       </label>
       <label className="block">
         <span className="text-xs font-medium text-slate-700">盘点说明</span>
         <input
           name="reason"
-          className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+          className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-xs text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
           placeholder="例如：月末盘点"
         />
       </label>

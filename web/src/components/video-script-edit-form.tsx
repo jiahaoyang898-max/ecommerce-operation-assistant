@@ -140,7 +140,7 @@ export function VideoScriptEditForm({ productId, script }: VideoScriptEditFormPr
 
       <button
         type="submit"
-        className="inline-flex h-10 w-fit items-center justify-center rounded-md bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+        className="inline-flex h-10 w-fit items-center justify-center rounded-md bg-brand-700 px-4 text-sm font-semibold text-white transition hover:bg-brand-800"
       >
         保存修改
       </button>

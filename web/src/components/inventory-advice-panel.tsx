@@ -43,7 +43,7 @@ export function InventoryAdvicePanel({ storeId, canEdit = true }: { storeId: num
             type="button"
             onClick={generateAdvice}
             disabled={loading}
-            className="inline-flex h-9 w-fit items-center gap-2 rounded-md bg-slate-950 px-3 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+            className="inline-flex h-9 w-fit items-center gap-2 rounded-md bg-brand-700 px-3 text-sm font-medium text-white hover:bg-brand-800 disabled:cursor-not-allowed disabled:bg-slate-400"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Brain className="h-4 w-4" aria-hidden="true" />}
             生成建议
@@ -59,8 +59,8 @@ export function InventoryAdvicePanel({ storeId, canEdit = true }: { storeId: num
 
       {advice ? (
         <div className="mt-5 grid gap-4">
-          <div className="rounded-md border border-cyan-100 bg-cyan-50 p-4">
-            <p className="text-xs font-medium text-cyan-800">{advice.source === "llm" ? "AI 生成" : "规则建议"}</p>
+          <div className="rounded-md border border-brand-100 bg-brand-50 p-4">
+            <p className="text-xs font-medium text-brand-800">{advice.source === "llm" ? "AI 生成" : "规则建议"}</p>
             <p className="mt-2 text-sm leading-6 text-slate-800">{advice.summary}</p>
           </div>
           <AdviceList title="风险判断" items={advice.risks} />

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { API_BASE_URL } from "@/lib/api";
 import { AUTH_COOKIE_NAME } from "@/lib/session";
 
-/** 处理登录/提交请求：读取表单和路径参数，调用后端 API，并按结果响应或重定向。 */
+/** 处理登录提交：读取表单转发后端，成功后只把 token 写入 httpOnly cookie。 */
 export async function POST(request: Request) {
   const formData = await request.formData();
   // 登录表单由服务端 route 转发给后端，成功后只把 token 写入 httpOnly cookie。
@@ -15,10 +15,15 @@ export async function POST(request: Request) {
       email: formData.get("email")?.toString() ?? "",
       password: formData.get("password")?.toString() ?? "",
     }),
-  });
+  }).catch(() => null);
+
+  if (!response) {
+    redirect("/login?error=server");
+  }
 
   if (!response.ok) {
-    redirect("/login?error=1");
+    // 401/403 统一归为凭据或账号状态问题，页面只展示一条通用提示，避免泄露账号是否存在。
+    redirect("/login?error=invalid_credentials");
   }
 
   const payload = (await response.json()) as { access_token: string };
@@ -28,6 +33,7 @@ export async function POST(request: Request) {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
+    maxAge: 60 * 60 * 24 * 7,
   });
 
   redirect("/");

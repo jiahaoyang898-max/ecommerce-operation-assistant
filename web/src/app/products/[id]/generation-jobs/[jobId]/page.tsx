@@ -27,7 +27,7 @@ export default async function GenerationJobDetailPage({ params }: GenerationJobD
   const resultUrl = jobResultUrl(job);
 
   return (
-    <main className="min-h-screen bg-[#f7f8fb] px-5 py-6 text-slate-950 lg:px-8">
+    <main className="min-h-screen bg-transparent px-5 py-6 text-slate-950 lg:px-8">
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
         <header className="flex flex-col gap-4 border-b border-slate-200 pb-5">
           <Link
@@ -85,7 +85,7 @@ export default async function GenerationJobDetailPage({ params }: GenerationJobD
                 <input type="hidden" name="tab" value="jobs" />
                 <button
                   type="submit"
-                  className="inline-flex h-9 items-center gap-2 rounded-md bg-slate-950 px-3 text-xs font-semibold text-white hover:bg-slate-800"
+                  className="inline-flex h-9 items-center gap-2 rounded-md bg-brand-700 px-3 text-xs font-semibold text-white hover:bg-brand-800"
                 >
                   <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
                   重试任务

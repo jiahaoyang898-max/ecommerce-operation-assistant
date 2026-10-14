@@ -6,11 +6,22 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.models import User, UserRole, Workspace
-from app.schemas import AuthTokenRead, LoginRequest, UserRead
-from app.services.auth import AuthTokenError, create_access_token, ensure_user_can_login, parse_access_token
-from app.services.users import user_to_read, verify_password
-from app.services.workspaces import WorkspaceAccess, WorkspaceAccessError, resolve_workspace_access
+from app.models import User, UserRole, UserStatus, Workspace
+from app.schemas import AuthTokenRead, LoginRequest, RegisterRequest, UserRead
+from app.services.auth import (
+    AuthTokenError,
+    create_access_token,
+    ensure_user_can_login,
+    parse_access_token,
+)
+from app.services.users import hash_password, user_to_read, verify_password
+from app.services.workspaces import (
+    WorkspaceAccess,
+    WorkspaceAccessError,
+    ensure_default_workspace,
+    ensure_workspace_membership,
+    resolve_workspace_access,
+)
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -29,6 +40,37 @@ def login(payload: LoginRequest, db: SessionDep) -> dict:
         ensure_user_can_login(user)
     except AuthTokenError as exc:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    return {
+        "access_token": create_access_token(user),
+        "token_type": "bearer",
+        "user": user_to_read(user),
+    }
+
+
+@router.post("/register", response_model=AuthTokenRead, status_code=status.HTTP_201_CREATED)
+def register(payload: RegisterRequest, db: SessionDep) -> dict:
+    # 自助注册固定写入 operator 角色与 active 状态，避免客户端通过注册接口提权。
+    """处理注册接口；校验输入、写入用户与默认 Workspace 成员关系后返回登录态。"""
+    # 输入已在 schema 层归一化（邮箱小写、昵称去空白、密码强度），这里只做唯一性与落库。
+    email = payload.email.strip().lower()
+    existing = db.scalars(select(User.id).where(User.email == email)).first()
+    if existing is not None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User email already exists")
+
+    user = User(
+        email=email,
+        display_name=payload.display_name.strip(),
+        role=UserRole.OPERATOR,
+        status=UserStatus.ACTIVE,
+        password_hash=hash_password(payload.password),
+    )
+    db.add(user)
+    db.flush()
+    # 新用户必须同时拿到默认 Workspace 成员关系，否则登录后会被 Workspace 校验拦截。
+    workspace = ensure_default_workspace(db)
+    ensure_workspace_membership(db, workspace=workspace, user=user, role=UserRole.OPERATOR)
+    db.commit()
+    db.refresh(user)
     return {
         "access_token": create_access_token(user),
         "token_type": "bearer",

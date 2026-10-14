@@ -47,7 +47,7 @@ const statusLabels: Record<AgentTaskStatus, string> = {
 
 const statusTones: Record<AgentTaskStatus, string> = {
   queued: "bg-slate-100 text-slate-700",
-  running: "bg-cyan-100 text-cyan-800",
+  running: "bg-brand-100 text-brand-800",
   awaiting_approval: "bg-amber-100 text-amber-800",
   completed: "bg-emerald-100 text-emerald-800",
   failed: "bg-rose-100 text-rose-800",
@@ -106,12 +106,12 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
   const activeCount = tasks.filter((task) => ["queued", "running"].includes(task.status)).length;
 
   return (
-    <main className="min-h-screen bg-[#f6f8fb] px-5 py-6 text-slate-950 lg:px-8">
+    <main className="min-h-screen bg-transparent px-5 py-6 text-slate-950 lg:px-8">
       <AgentTaskAutoRefresh active={activeCount > 0} />
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
         <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="flex items-center gap-2 text-sm font-medium text-cyan-700">
+            <div className="flex items-center gap-2 text-sm font-medium text-brand-700">
               <Bot className="h-4 w-4" aria-hidden="true" />
               Ecommerce Operations Agent
             </div>
@@ -144,7 +144,7 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
               <Home className="h-4 w-4" aria-hidden="true" />
               业务工作台
             </Link>
-            <span className="inline-flex h-9 items-center rounded-md bg-slate-950 px-3 text-sm font-medium text-white">
+            <span className="inline-flex h-9 items-center rounded-md bg-brand-700 px-3 text-sm font-medium text-white">
               {currentUser?.display_name ?? "当前用户"} · {workspace.workspace.name}
             </span>
           </div>
@@ -174,7 +174,7 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
                 <h2 className="text-lg font-semibold">告诉协调 Agent 你的目标</h2>
                 <p className="mt-1 text-sm text-slate-500">协调 Agent 只从已注册工作流中路由，不会自由拼装高风险动作。</p>
               </div>
-              <ShieldCheck className="h-6 w-6 text-cyan-700" aria-hidden="true" />
+              <ShieldCheck className="h-6 w-6 text-brand-700" aria-hidden="true" />
             </div>
             <form action="/agent/tasks/create" method="post" className="mt-5 space-y-4">
               <input type="hidden" name="workspace_id" value={workspaceId} />
@@ -183,18 +183,18 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
                 required
                 disabled={!canEdit}
                 placeholder="例如：检查这款商品近期的库存和经营风险，并给出下一步建议"
-                className="min-h-28 w-full rounded-md border border-slate-300 bg-white px-3 py-3 text-sm outline-none focus:border-cyan-600 focus:ring-2 focus:ring-cyan-100 disabled:bg-slate-100"
+                className="min-h-28 w-full rounded-md border border-slate-300 bg-white px-3 py-3 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:bg-slate-100"
               />
               <ContextSelectors products={products} stores={stores} disabled={!canEdit} />
-              <button type="submit" disabled={!canEdit} className="inline-flex h-10 items-center gap-2 rounded-md bg-cyan-700 px-4 text-sm font-medium text-white hover:bg-cyan-800 disabled:cursor-not-allowed disabled:bg-slate-300">
+              <button type="submit" disabled={!canEdit} className="inline-flex h-10 items-center gap-2 rounded-md bg-brand-700 px-4 text-sm font-medium text-white hover:bg-brand-800 disabled:cursor-not-allowed disabled:bg-slate-300">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
                 创建受控任务
               </button>
             </form>
           </div>
 
-          <div className="rounded-md border border-slate-200 bg-slate-950 p-5 text-white">
-            <div className="flex items-center gap-2 text-sm font-medium text-cyan-300">
+          <div className="rounded-md border border-brand-800/35 bg-brand-800 p-5 text-white">
+            <div className="flex items-center gap-2 text-sm font-medium text-brand-300">
               <ShieldCheck className="h-4 w-4" aria-hidden="true" /> Harness 边界
             </div>
             <h2 className="mt-3 text-xl font-semibold">不是把多个 Prompt 串在一起</h2>
@@ -226,11 +226,11 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
           </div>
           <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {catalog?.workflows.map((workflow) => (
-              <form key={workflow.key} action="/agent/tasks/create" method="post" className="flex flex-col rounded-md border border-slate-200 p-4 hover:border-cyan-300">
+              <form key={workflow.key} action="/agent/tasks/create" method="post" className="flex flex-col rounded-md border border-slate-200 p-4 hover:border-brand-300">
                 <input type="hidden" name="workspace_id" value={workspaceId} />
                 <input type="hidden" name="workflow_key" value={workflow.key} />
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-md bg-cyan-50 text-cyan-700"><Play className="h-4 w-4" aria-hidden="true" /></div>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-md bg-brand-50 text-brand-700"><Play className="h-4 w-4" aria-hidden="true" /></div>
                   <span className={`rounded-md px-2 py-1 text-xs font-semibold ${riskTones[workflow.default_risk_level]}`}>{workflow.default_risk_level}</span>
                 </div>
                 <h3 className="mt-4 font-semibold">{workflow.title}</h3>
@@ -309,7 +309,7 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
           <h2 className="text-lg font-semibold">内部专业 Agent 目录</h2>
           <p className="mt-1 text-sm text-slate-500">用户只与顶层 Agent 交互；专业 Agent 的版本和工具白名单可审计。</p>
           <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            {catalog?.agents.map((agent) => <div key={agent.key} className="rounded-md border border-slate-200 p-4"><p className="font-medium">{humanizeAgent(agent.key)}</p><p className="mt-1 text-xs text-cyan-700">v{agent.version}</p><p className="mt-3 text-sm leading-5 text-slate-500">{agent.description}</p><p className="mt-3 text-xs text-slate-400">{agent.tools.length} 个允许工具</p></div>)}
+            {catalog?.agents.map((agent) => <div key={agent.key} className="rounded-md border border-slate-200 p-4"><p className="font-medium">{humanizeAgent(agent.key)}</p><p className="mt-1 text-xs text-brand-700">v{agent.version}</p><p className="mt-3 text-sm leading-5 text-slate-500">{agent.description}</p><p className="mt-3 text-xs text-slate-400">{agent.tools.length} 个允许工具</p></div>)}
           </div>
         </section>
       </div>
@@ -329,7 +329,7 @@ function ApprovalForm({ approvalId, workspaceId, decision, draftOutput }: { appr
 }
 
 /** 渲染 Metric 组件，集中展示指标所需的数据、状态和操作入口。 */
-function Metric({ icon: Icon, label, value, tone = "text-cyan-700" }: { icon: typeof Activity; label: string; value: number; tone?: string }) {
+function Metric({ icon: Icon, label, value, tone = "text-brand-700" }: { icon: typeof Activity; label: string; value: number; tone?: string }) {
   return <div className="rounded-md border border-slate-200 bg-white p-4"><div className="flex items-center justify-between"><p className="text-sm text-slate-500">{label}</p><Icon className={`h-4 w-4 ${tone}`} aria-hidden="true" /></div><p className="mt-2 text-2xl font-semibold">{value}</p></div>;
 }
 
@@ -342,10 +342,10 @@ function JsonPanel({ title, value }: { title: string; value: Record<string, unkn
 function EmptyText({ text }: { text: string }) { return <div className="rounded-md border border-dashed border-slate-300 px-4 py-8 text-center text-sm text-slate-500">{text}</div>; }
 
 /** 渲染 EmptyWorkspace 组件，集中展示空状态Workspace所需的数据、状态和操作入口。 */
-function EmptyWorkspace() { return <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6"><div className="max-w-lg rounded-md border border-slate-200 bg-white p-8 text-center"><Bot className="mx-auto h-8 w-8 text-slate-400" /><h1 className="mt-4 text-xl font-semibold">暂无可用 Workspace</h1><p className="mt-2 text-sm text-slate-500">请先运行数据库迁移并为当前用户创建 WorkspaceMembership。</p></div></main>; }
+function EmptyWorkspace() { return <main className="flex min-h-screen items-center justify-center bg-transparent p-6"><div className="max-w-lg rounded-md border border-slate-200 bg-white p-8 text-center"><Bot className="mx-auto h-8 w-8 text-slate-400" /><h1 className="mt-4 text-xl font-semibold">暂无可用 Workspace</h1><p className="mt-2 text-sm text-slate-500">请先运行数据库迁移并为当前用户创建 WorkspaceMembership。</p></div></main>; }
 
 /** 渲染 AgentServiceError 组件，集中展示Agent服务错误所需的数据、状态和操作入口。 */
-function AgentServiceError() { return <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6"><div className="max-w-lg rounded-md border border-rose-200 bg-white p-8 text-center"><XCircle className="mx-auto h-8 w-8 text-rose-600" /><h1 className="mt-4 text-xl font-semibold">Agent 服务暂不可用</h1><p className="mt-2 text-sm text-slate-500">请求未被伪装为空数据，请检查 API、权限或基础设施状态后重试。</p></div></main>; }
+function AgentServiceError() { return <main className="flex min-h-screen items-center justify-center bg-transparent p-6"><div className="max-w-lg rounded-md border border-rose-200 bg-white p-8 text-center"><XCircle className="mx-auto h-8 w-8 text-rose-600" /><h1 className="mt-4 text-xl font-semibold">Agent 服务暂不可用</h1><p className="mt-2 text-sm text-slate-500">请求未被伪装为空数据，请检查 API、权限或基础设施状态后重试。</p></div></main>; }
 
 /** 渲染 ResultBanner 组件，集中展示结果提示横幅所需的数据、状态和操作入口。 */
 function ResultBanner({ result }: { result: string }) {

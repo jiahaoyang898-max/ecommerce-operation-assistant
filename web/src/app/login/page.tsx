@@ -2,6 +2,7 @@ import { AlertCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
 import { AuthLayout } from "@/components/auth-layout";
+import { DemoLoginFill } from "@/components/demo-login-fill";
 import { PasswordInput } from "@/components/password-input";
 
 type LoginPageProps = {
@@ -90,6 +91,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <button type="submit" className="auth-btn auth-btn-primary">
             登 录
           </button>
+
+          <DemoLoginFill />
+          <p className="auth-hint">演示账号：demo@example.com / Passw0rd123</p>
         </div>
 
         <div className="auth-swap">

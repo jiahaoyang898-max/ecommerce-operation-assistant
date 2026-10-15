@@ -2,7 +2,7 @@ FROM node:22-slim AS deps
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --registry=https://registry.npmmirror.com
 
 FROM node:22-slim AS builder
 
@@ -17,7 +17,7 @@ FROM node:22-slim AS prod-deps
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --registry=https://registry.npmmirror.com
 
 FROM node:22-slim AS runner
 

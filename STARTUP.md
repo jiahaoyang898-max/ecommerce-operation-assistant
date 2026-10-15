@@ -15,6 +15,20 @@
 
 ---
 
+## 〇·五、本机实跑差异（2026-10-15 实测记录）
+
+| 项 | 本机实际值 | 原因与说明 |
+|---|---|---|
+| 后端 API 端口 | **8002**（非 8000） | 8000 被 `das-backend` 容器占用。改 `.env` 的 `API_PORT` 即可，`docker-compose.yml` 里前端构建参数 `NEXT_PUBLIC_API_BASE_URL` 会自动跟随 |
+| MySQL 宿主端口 | **3308**（非 3306） | 3306 被 `cs-mysql` 容器占用。容器内部仍是 3306，仅宿主机映射改变，业务代码无影响 |
+| 演示账号 | `demo@example.com` / `Passw0rd123` | 角色 operator。登录页有 **「一键填入演示账号」** 按钮，点一下自动填好邮箱与密码 |
+| 基础镜像 | 已预置在本地 | 本机三个 Docker Hub 加速源（`1ms.run` / `xuanyuan.me` / `daocloud`）全部不可用且首源失败不回退。`start.ps1` 已内置自检：缺镜像时自动从 `swr.cn-north-4.myhuaweicloud.com` 与 `ghcr.nju.edu.cn` 补拉并 retag 回标准名 |
+| npm 源 | `registry.npmmirror.com` | 官方源 `registry.npmjs.org` 在本机装包持续 `ECONNRESET`，已写入 `web/Dockerfile` 两处 `npm ci` |
+| 双击 `start.bat` | 可用且更快 | 脚本已改为：应用镜像已存在 → 只 `up -d`（秒级启动）；缺镜像 → 自动 `--build` |
+| 即梦图片 / 视频 | **均不可用** | 火山引擎账号余额不足，供应商返回 `code 50400 Access Denied`。充值或开通能力后**无需改代码**即恢复；文本大模型通道正常（`/settings` 测试 text 返回 200） |
+
+---
+
 ## 一、启动前的唯一前提：Docker Desktop
 
 本项目 6 个服务全部跑在 Docker 里，**必须先有 Docker 引擎**。
@@ -156,6 +170,9 @@ cd D:\ruanjian\ecommerce-operation-assistant; .\rebuild.ps1
 | 改了代码但页面没变化 | 容器不挂载源码，必须重新构建。重新跑 `start.bat` |
 | 中文提示显示乱码 | 用「双击 `start.bat`」的方式启动（bat 会自动切 UTF-8 代码页）；不要从 Git Bash 里跑 |
 | 生成视频报「Access Denied」 | 火山引擎账号未开通即梦视频生成权限，属账号授权，非代码问题 |
+| 生成**图片**也报「Access Denied」 | 2026-10-15 本机实测：账号余额不足时图片与视频会被同批拒绝（`code 50400`）。文本模型不受影响，`/settings` 测 text 返回 200 |
+| 构建 web 镜像时 `npm ci` 报 `ECONNRESET` | `registry.npmjs.org` 在本机持续被连接重置。已在 `web/Dockerfile` 两处 `npm ci` 加 `--registry=https://registry.npmmirror.com`；若复发先查这两行是否被改回 |
+| 基础镜像拉不下来（`EOF` / `502 Bad Gateway`） | 本机三个加速源全部失效，且 Docker 首源失败后不回退。直接跑 `start.bat` / `start.ps1`，它会自动从华为云 SWR 与 `ghcr.nju.edu.cn` 补拉并 retag 回标准名 |
 
 ---
 

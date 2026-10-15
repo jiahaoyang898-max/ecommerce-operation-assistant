@@ -241,3 +241,53 @@ docker compose logs --tail 100 web # 最近 100 行前端日志
 - 功能范围与最初版一致：除「移除演示数据入口」外，未新增或删除任何业务功能；本轮仅"接通"了原本定义了却未被调度的既有能力。
 - 已知边界（最初版既有、非本次引入）：直接构造**空表单** `POST /products/create`、`/stores/create` 会返回 500（zod 校验异常未被捕获）。由于两个表单都带 `required`，浏览器会拦截空提交，**正常使用路径不可达**。
 
+---
+
+## 十、2026-10-15 本机全量复测记录（端口偏离 + 网络绕行）
+
+本次在**同一台 Windows 机器上与另外两个项目（`das-*`、`cs-*`）并行运行**，因此产生端口偏离；并因本机镜像源失效做了构建绕行。功能面复测结论如下。
+
+### 10.1 端口偏离（仅宿主机映射，业务代码无改动）
+
+| 服务 | 手册默认 | 本机实际 | 偏离原因 |
+|---|---|---|---|
+| api | 8000 | **8002** | 8000 被 `das-backend` 占用 |
+| mysql | 3306 | **3308** | 3306 被 `cs-mysql` 占用 |
+| web / redis / agent-checkpoints | 3000 / 6379 / 5433 | 未变 | 空闲 |
+
+13 个宿主端口三项目互不重叠；本项目 5 个端口实测全部可连通，`das-*`、`cs-*` 容器全程未受影响。
+
+### 10.2 构建绕行（两处）
+
+| 问题 | 现象 | 处理 |
+|---|---|---|
+| Docker Hub 加速源全挂 | `docker.1ms.run` blob 下载 `EOF`、`daocloud` 502、`xuanyuan.me` 解析 EOF，且首源失败后 Docker **不回退** | 显式从 `swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/*` 与 `ghcr.nju.edu.cn/astral-sh/uv` 拉取后 retag 回标准名；已把该自检固化进 `start.ps1` |
+| npm 官方源装包被重置 | `npm ci` 拉 tarball 时 `ECONNRESET`，连续两次同阶段失败 | `web/Dockerfile` 两处 `npm ci` 增加 `--registry=https://registry.npmmirror.com` |
+
+### 10.3 功能面复测结果
+
+| 测试面 | 规模 | 结果 |
+|---|---|---|
+| GET 接口 | 26 | 22×200；**0 个 500**；1×403（`/api/v1/users` 对 operator 正常拦截）；3×404（探测用假 ID） |
+| 业务写链路 | 24 步 | 全部 2xx（建店/建品/改品/SKU/库存流水/平台映射/竞品/绩效/推广链接/广告实验/复盘/Agent 会话+消息+记忆/CSV 导入/竞品监控注册与手动跑/run-due/超时回收） |
+| 前端页面 | 14 路由 | 已登录会话下全部 200。注意：动态路由对**无 cookie 裸请求返回 404**（服务端鉴权拦截，非缺陷），复测脚本须带会话 |
+| AI 文本链路 | 诊断 / 主图方案 | 201 真实产出并落库，新生成诊断可在 `/products/2?tab=diagnosis` 页面渲染可见 |
+| 模型通道探活 | text / image / video | text **200 ok**；image 与 video 均 **502 Access Denied** |
+| 异步任务 | 14 条 | `failed:1 / cancelled:9 / succeeded:4`，**无 pending/running 卡死**；beat 每 5s `sweep_generation_jobs` 均 succeeded |
+| 日志 | api + worker | 各取 200 行，0 个 traceback |
+
+### 10.4 对第 9.3 节的更新
+
+9.3 记录的「图片可用、仅视频不可用」在本机已不成立：**图片与视频现均返回 `code 50400 Access Denied`**（火山引擎账号余额不足）。应用侧行为正常——返回可读中文提示而非裸报错，文本大模型不受影响。账号充值或开通后无需改码即恢复。
+
+### 10.5 本次代码与配置变更
+
+| 文件 | 变更 |
+|---|---|
+| `.env` | `API_PORT=8002`、`MYSQL_PORT=3308` |
+| `web/Dockerfile` | 两处 `npm ci` 指向 `registry.npmmirror.com` |
+| `web/src/components/demo-login-fill.tsx` | 新增：登录页一键填充演示账号的客户端组件 |
+| `web/src/app/login/page.tsx` | 挂载该按钮并显示演示凭据提示 |
+| `start.ps1` | 新增基础镜像自检与补拉 retag；应用镜像已存在时跳过 `--build` 直接 `up -d` |
+| 演示账号 | `demo@example.com` / `Passw0rd123`（角色 operator） |
+
